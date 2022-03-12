@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "abb.h": "c",
+        "type_traits": "cpp"
+    }
+}
