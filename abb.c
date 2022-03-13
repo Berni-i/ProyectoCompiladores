@@ -3,22 +3,16 @@
 #include <stdlib.h>
 #include <string.h>
 
-///////////////////////// ESTRUCTURAS DE DATOS
 
 struct celda {
     tipoelem info;
     struct celda *izq, *der;
 };
 
-//////////////////////// FUNCIONES
-
-
-/////////////////////////////////////////////////////////////
-/////////////////////////// INICIO PARTE MODIFICABLE
 
 /*Extraer la clave de una celda */
 tipoclave _clave_elem(tipoelem *E) {
-    return E->nombreJugador;
+    return E->lexema;
 }
 
 /* Esta funcion puente nos permite modificar el tipo de
@@ -34,13 +28,10 @@ int _comparar_claves(tipoclave cl1, tipoclave cl2) {
  * permite hacer mas eficiente la destruccion del arbol.*/
 void _destruir_elem(tipoelem *E) {
     //No se hace nada en la version 1
-    if(E->tareas != NULL){
+    /*if(E->tareas != NULL){
         destruir_cola(&E->tareas); //Destrucción de la cola de tareas
-    }
+    }*/
 }
-
-/////////////////////////// FIN PARTE MODIFICABLE
-/////////////////////////////////////////////////////////////
 
 //OPERACIONES DE CREACIÓN Y DESTRUCCIÓN
 

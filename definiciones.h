@@ -1,3 +1,4 @@
+//definiciones de las palabras clave
 #define PACKAGE 500
 #define IMPORT 501
 #define FUNC 502
@@ -6,3 +7,5 @@
 #define FOR 505
 #define RANGE 506
 #define GO 507
+
+#define TAMCADENA 32

@@ -1,28 +1,22 @@
 #ifndef ABB_H
 #define ABB_H
-#define L 20
 
-#include "cola.h";
+#include "definiciones.h"
 
 /**
  * Tipo de dato abstracto para arbol binario con clave de
  * ordenacion y elemento de celda.
  */
 
-///////////////////////////////////////INICIO PARTE MODIFICABLE
 typedef char * tipoclave;
 
 typedef struct {
-	char nombreJugador[L];
-	char rol;
-	cola tareas; //Cambiamos la cadena de texto por una cola
-} tipoelem;
-
-//////////////////////////////////////////FIN PARTE MODIFICABLE
-		
+	char lexema[TAMCADENA];
+	int componenteLexico;
+} tipoelem; //definir tipoelem aquí para no modificar el .c
+	
 typedef struct celda * abb;//tipo opaco
 
-/////////////////////////////// FUNCIONES
 
 //FUNCIONES DE CREACIÓN Y DESTRUCCIÓN DEL ÁRBOL
 /**
