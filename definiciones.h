@@ -9,3 +9,8 @@
 #define GO 507
 
 #define TAMCADENA 32
+
+typedef struct {
+	char lexema[TAMCADENA];
+	int componenteLexico;
+} tipoelem; //definir tipoelem aquí para no modificar el .c

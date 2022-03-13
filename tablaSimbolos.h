@@ -1,1 +1,2 @@
 void inicializarTabla();
+void destruirTabla();

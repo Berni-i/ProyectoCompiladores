@@ -45,3 +45,7 @@ void inicializarTabla(){
 
 }
 
+void destruirTabla(){
+    destruir(&tablaSimbolos);
+}
+
