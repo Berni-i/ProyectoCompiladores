@@ -1,5 +1,4 @@
 #include "abb.h"
-#include "definiciones.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -11,7 +10,7 @@ void imprimir(abb A) {
 
 	if(!es_vacio(A)){
 	  imprimir(izq(A));
-	  leer(A,&E); 
+	  leer(A,&E);
           printf("%s, %d\n", E.lexema, E.componenteLexico);
 	  imprimir(der(A));
 	}
@@ -19,7 +18,7 @@ void imprimir(abb A) {
 
 //función para iniciar la tabla con las palabras reservadas
 void inicializarTabla(){
-    
+
     //declaración de los arrays cn los valores y las palabras
     char nombres[][TAMCADENA] = {"package", "import", "func", "chan", "var", "for", "range", "go"};
     int definiciones[] = {PACKAGE, IMPORT, FUNC, CHAN, VAR, FOR, RANGE, GO};
@@ -48,4 +47,3 @@ void inicializarTabla(){
 void destruirTabla(){
     destruir(&tablaSimbolos);
 }
-

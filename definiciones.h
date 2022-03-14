@@ -8,8 +8,10 @@
 #define RANGE 506
 #define GO 507
 
+//definición del tamaño máximo de la cadena
 #define TAMCADENA 32
 
+//definición de las estrcuturas con las que trabajará el árbol de la tabla de símbolos
 typedef struct {
 	char lexema[TAMCADENA];
 	int componenteLexico;

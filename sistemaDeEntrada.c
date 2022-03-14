@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "definiciones.h"
 
 FILE *fichero;
@@ -57,7 +58,7 @@ char siguienteCaracter(){
     return caracter;
 }
 
-//devolver la palabra en el momento en que el analizador léxico detecte que se ha llegado 
+//devolver la palabra en el momento en que el analizador léxico detecte que se ha llegado
 //a un estado final
 char* devolverPalabra(){
     char* palabra = "";
@@ -74,4 +75,11 @@ char* devolverPalabra(){
     }
 
     return palabra;
+}
+
+//función que permita ignorar caracteres cuando se trate de espacios o comentarios
+void saltarCaracter(){
+    //inicio += 1;
+    inicio = delantero;
+    //ya que delantero irá posición a posición y se pretende que se ignore un caracter
 }

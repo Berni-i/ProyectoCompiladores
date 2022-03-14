@@ -16,14 +16,14 @@ tipoclave _clave_elem(tipoelem *E) {
 }
 
 /* Esta funcion puente nos permite modificar el tipo de
- * de datos del TAD sin tener que cambiar todas las 
+ * de datos del TAD sin tener que cambiar todas las
  * comparaciones del resto de la biblioteca y en su lugar
  * cambiando solo esta. */
 int _comparar_claves(tipoclave cl1, tipoclave cl2) {
     return strcmp(cl1,cl2)==0 ? 0 : strcmp(cl1,cl2)>0 ? 1 : -1;
 }
 
-/* Si tipoelem tiene alguna estructura que necesite 
+/* Si tipoelem tiene alguna estructura que necesite
  * destruirse ha de hacerse aqui. El uso de esta funcion
  * permite hacer mas eficiente la destruccion del arbol.*/
 void _destruir_elem(tipoelem *E) {
@@ -111,7 +111,7 @@ void buscar_nodo(abb A, tipoclave cl, tipoelem *nodo) {
 }
 //OPERACIONES DE MODIFICACIÓN
 
-/* Funcion recursiva para insertar un nuevo nodo 
+/* Funcion recursiva para insertar un nuevo nodo
    en el arbol. Se presupone que no existe un nodo
    con la misma clave en el arbol. */
 void insertar(abb *A, tipoelem E) {
