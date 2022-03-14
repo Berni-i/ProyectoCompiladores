@@ -7,6 +7,8 @@ FILE *fichero;
 //declaración de los dos buffers con un espacio extra para EOF
 char b1[TAMCADENA+1], b2[TAMCADENA+1];
 
+//evitar que el retroceso de un caracter pueda suponer que se salte contenido
+bool cargar = true;
 
 //punteros de inicio y delantero
 char *inicio = b1, *delantero = b1;
@@ -17,12 +19,16 @@ void cargarBuffer(char *buffer){
 
     /*TODO*/
     //tratamiento de errores en caso de perder el puntero de inicio
+    if(cargar){ }
+        fread(buffer,1,TAMCADENA,fichero);
 
-    fread(buffer,1,TAMCADENA,fichero);
-
-    for (int i = 0; i < TAMCADENA; i++)
-    {
-        printf("%c", *(b1+i));
+        for (int i = 0; i < TAMCADENA; i++)
+        {
+            printf("%c", *(b1+i));
+        }
+    else{
+        //habilitar la carga para la siguientne vez
+        cargar = true;
     }
 }
 
@@ -82,4 +88,18 @@ void saltarCaracter(){
     //inicio += 1;
     inicio = delantero;
     //ya que delantero irá posición a posición y se pretende que se ignore un caracter
+}
+
+void devolverCaracter(){
+    //función que servirá para devolver un caracter
+    if(delantero == b1){
+        delantero = (b2 + TAMCADENA);
+        cargar = false;
+    }else if(delantero == b2){
+        delantero = (b1 + TAMCADENA);
+        cargar = false;
+    }else{
+        delantero -= 1;
+    }
+
 }

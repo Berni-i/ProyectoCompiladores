@@ -8,6 +8,16 @@
 #define RANGE 506
 #define GO 507
 
+//definiciones de operadores
+#define DOSPUNTOSIGUAL 508
+#define MASIGUAL 509
+#define FLECHAIZQUIERDA 510
+#define CADENAS 511
+
+//definición de literales
+#define ENTERO 512
+#define FLOTANTES 513
+
 //definición del tamaño máximo de la cadena
 #define TAMCADENA 32
 
