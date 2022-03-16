@@ -10,7 +10,6 @@ int main(int argc, char const *argv[])
 {
 
     //INICIALIZAR ESTRUCTURAS DE DATOS
-
     //abrir fichero en modo lectura
     fuente = fopen("concurrentSum.go", "r");
 
@@ -18,6 +17,14 @@ int main(int argc, char const *argv[])
     iniciarBuffer(fuente);
     
 
+    //COMENZAR BUCLE
+    //llamar a la función del analizador sintáctico.
+
+
+
+    //cerrar el fichero
     fclose(fuente);
+    //destruir la tabla de símbolos
+    destruirTabla();
     return 0;
 }
