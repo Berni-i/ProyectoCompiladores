@@ -26,7 +26,7 @@ void cargarBuffer(char *buffer)
         printf("\nimpresión del buffer\n");
         for (int i = 0; i < TAMCADENA; i++)
         {
-            printf("%c", *(b1 + i));
+            printf("%c", *(buffer + i));
         }
         printf("\n\n");
     }
@@ -59,23 +59,30 @@ char siguienteCaracter()
     // comprobar si se encuentra en uno de los fines de fichero
     if (caracter == EOF)
     {
+
+         printf("delantero = %c inicio = %c\n", *delantero, *inicio);
         if (delantero == (b1 + TAMCADENA))
         {
             cargarBuffer(b2);
             delantero = b2;
+            caracter = *b2;
+            printf("delantero = %c inicio = %c\n", *delantero, *inicio);
         }
-        else if (delantero == (b2))
+        else if (delantero == (b2 + TAMCADENA))
         {
             cargarBuffer(b1);
             delantero = b1;
+            caracter = *b1;
         }
         else
         {
             return EOF;
         }
+    }else{
+        delantero += 1;
     }
 
-    delantero += 1;
+
     return caracter;
 }
 

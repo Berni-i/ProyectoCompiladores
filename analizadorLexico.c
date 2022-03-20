@@ -11,6 +11,8 @@ void operadoresVariosDigitos(char caracter, tipoelem *e);
 
 void puntoFlotante(char caracter, tipoelem *e);
 
+void cadenas(tipoelem *e);
+
 tipoelem *siguienteElemento()
 {
     // leer caracter
@@ -49,10 +51,15 @@ tipoelem *siguienteElemento()
         // autómata para operadores de varios símbolos
         operadoresVariosDigitos(caracter, e);
     }
+    else if (caracter == '"')
+    {
+        cadenas(e);
+    }
     else
     { // lexemas que solo contengan un caracter como +, -, )...
         strcpy(e->lexema, (char *)&caracter);
         e->componenteLexico = caracter;
+        saltarCaracter();
     }
 
     printf("%s\n", e->lexema);
@@ -184,4 +191,18 @@ void puntoFlotante(char caracter, tipoelem *e)
         strcpy(e->lexema, devolverPalabra());
         e->componenteLexico = FLOTANTES;
     }
+}
+
+void cadenas(tipoelem *e)
+{
+    char leido;
+
+    do
+    {
+        leido = siguienteCaracter();
+    } while (leido != '"');
+
+    // actualizar elemento
+    strcpy(e->lexema, devolverPalabra());
+    e->componenteLexico = CADENAS;
 }
