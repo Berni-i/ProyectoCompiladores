@@ -10,7 +10,8 @@ void comenzarLectura(){
     {
         e = siguienteElemento();
 
-        printf("<%s, %d>", e->lexema, e->componenteLexico);
+        if(e != NULL) printf("<%s, %d>\n", e->lexema, e->componenteLexico);
     } while (e != NULL);
+
     
 }

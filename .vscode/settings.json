@@ -3,5 +3,6 @@
         "abb.h": "c",
         "type_traits": "cpp"
     },
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "Disabled",
+    "editor.fontSize": 16
 }

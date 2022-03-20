@@ -16,19 +16,24 @@ char *inicio = b1, *delantero = b1;
 // cargar el buffer correspondiente
 void cargarBuffer(char *buffer)
 {
+    int leidos;
 
     /*TODO*/
     // tratamiento de errores en caso de perder el puntero de inicio
-    if (cargar)
+    if (cargar && !feof(fichero))
     {
-        fread(buffer, 1, TAMCADENA, fichero);
+        leidos = fread(buffer, 1, TAMCADENA, fichero);
 
-        printf("\nimpresión del buffer\n");
+        if(leidos < TAMCADENA){
+            *(buffer + leidos) = EOF;
+        }
+
+        /*printf("\nimpresión del buffer\n");
         for (int i = 0; i < TAMCADENA; i++)
         {
             printf("%c", *(buffer + i));
         }
-        printf("\n\n");
+        printf("\n\n");*/
     }
     else
     {
@@ -54,35 +59,38 @@ char siguienteCaracter()
 {
     char caracter = *delantero;
 
-    printf("sig caracter delantero = %c inicio = %c\n", *delantero, *inicio);
+    //printf("sig caracter delantero = %c inicio = %c\n", *delantero, *inicio);
 
     // comprobar si se encuentra en uno de los fines de fichero
     if (caracter == EOF)
     {
 
-        printf("delantero = %c inicio = %c\n", *delantero, *inicio);
+        //printf("delantero = %c inicio = %c\n", *delantero, *inicio);
         if (delantero == (b1 + TAMCADENA))
         {
             cargarBuffer(b2);
             delantero = b2;
             caracter = *b2;
-            printf("delantero = %c inicioeee = %c\n", *delantero, *inicio);
+            //printf("delantero = %c inicioeee = %c\n", *delantero, *inicio);
         }
         else if (delantero == (b2 + TAMCADENA))
         {
             cargarBuffer(b1);
             delantero = b1;
             caracter = *b1;
-            printf("delantero = %c inicioaa = %c\n", *delantero, *inicio);
+            
+            //printf("delantero = %c inicioaa = %c\n", *delantero, *inicio);
         }
         else
         {
+            printf("Caracter final leido\n");
             return EOF;
         }
     }else{
         delantero += 1;
     }
 
+    //printf("caracter %c\n",caracter);
 
     return caracter;
 }
@@ -94,6 +102,14 @@ char *devolverPalabra()
     int i = 0, tam = 8;
     char *palabra = malloc(tam);
 
+    //si se retrasa una posición en el momento de cambiar de buffer estarán en la misma posición
+    //los dos punteros
+    if(inicio == delantero){
+        *palabra = *delantero;
+
+       inicio++;
+       delantero++;
+    }
 
     while (inicio != delantero)
     {
@@ -102,10 +118,12 @@ char *devolverPalabra()
             if(inicio == (b1 + TAMCADENA))
             {
                 inicio = b2;
+                //printf("dos\n");
             }
             else if (inicio == (b2 + TAMCADENA))
             {
                 inicio = b1;
+                //printf("dossss\n");
             }
         }
 
@@ -115,9 +133,17 @@ char *devolverPalabra()
         }
 
         *(palabra + i) = *inicio;
+
+        //sino nunca se llega a la primera posicion
+        if(inicio == delantero) break;
+
         inicio += 1;
         i++;
     }
+
+    //printf("uno\n");
+
+    
 
     //sino se queda en eof si acaba el buffer justo
     if (*inicio == EOF)
@@ -125,15 +151,17 @@ char *devolverPalabra()
         if(inicio == (b1 + TAMCADENA))
         {
             inicio = b2;
+            //printf("dos\n");
         }
         else if (inicio == (b2 + TAMCADENA))
         {
             inicio = b1;
+            //printf("tres\n");
         }
     }
 
-    printf("palabra devuelta %s\n", palabra);
-    printf("posicion de delantero= %c e inicio %c\n", *delantero, *inicio);
+    //printf("palabra devuelta %s\n", palabra);
+    //printf("posicion de delantero= %c e inicio %c\n", *delantero, *inicio);
     return palabra;
 }
 
@@ -147,22 +175,24 @@ void saltarCaracter()
 
 void devolverCaracter()
 {
+
+
     // función que servirá para devolver un caracter
     if (delantero == b1)
     {
         delantero = (b2 + TAMCADENA);
         cargar = 0;
-        printf("holaaaa\n");
+        //printf("holaaaa\n");
     }
     else if (delantero == b2)
     {
         delantero = (b1 + TAMCADENA);
         cargar = 0;
-        printf("adios\n");
+        //printf("adios\n");
     }
     else
     {
         delantero -= 1;
-        printf("chao\n");
+        //printf("chao\n");
     }
 }

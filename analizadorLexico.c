@@ -1,5 +1,6 @@
 #include "definiciones.h"
 #include "sistemaDeEntrada.h"
+#include "tablaSimbolos.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -18,21 +19,26 @@ tipoelem *siguienteElemento()
     // leer caracter
     char caracter = siguienteCaracter();
 
-    tipoelem *e;
-    e = malloc(sizeof(tipoelem));
+    //sleep(1);
 
-    if (caracter == EOF)
-    {
-        free(e);
-        return NULL;
-    }
+    tipoelem *e;
+    
 
     // saltar los espacios
     while (caracter == 32 || caracter == '\n')
     {
         saltarCaracter(); // mandar inicio a la posición de delantero
         caracter = siguienteCaracter();
+        //printf("leido espacio o barra n\n");
     }
+
+    if (caracter == EOF)
+    {
+        printf("Final analizador léxico\n");
+        return NULL; 
+    }
+
+    e = malloc(sizeof(tipoelem));
 
     // comprobar si se trata de una cadena alfanumérica
     // un caracter del alfabeto o una barra baja
@@ -62,7 +68,7 @@ tipoelem *siguienteElemento()
         saltarCaracter();
     }
 
-    printf("%s\n", e->lexema);
+    //printf("%s\n", e->lexema);
 
     return e;
 }
@@ -85,7 +91,7 @@ void cadenaAlfanumerica(char caracter, tipoelem *e)
     strcpy(e->lexema, devolverPalabra());
 
     // preguntar a la tabla de símbolos de qué se trata
-    // TODO
+    e->componenteLexico = devolverComponente(e->lexema);
 }
 
 void numeros(char caracter, tipoelem *e)
@@ -127,6 +133,7 @@ void numeros(char caracter, tipoelem *e)
         else if (leido == 'i')
         {
             // IMAGINARIO
+            //printf("holaaa");
             strcpy(e->lexema, devolverPalabra());
             e->componenteLexico = IMAGINARIOS;
         }
@@ -158,6 +165,7 @@ void puntoFlotante(char caracter, tipoelem *e)
     if (leido == 'E' || leido == 'e')
     {
         leido = siguienteCaracter();
+        //printf("holeeee\n");
 
         if (leido == '+' || leido == '-')
         {
@@ -169,18 +177,23 @@ void puntoFlotante(char caracter, tipoelem *e)
             while (leido >= 48 && leido <= 57)
             {
                 leido = siguienteCaracter();
+                //printf("holiiiii\n");
             }
         }
         else
         {
-            // Error, número sin exponente
+            //printf("ooooooº\n");
         }
     }
 
+    //printf("holiixxxiii %c\n", leido);
+
     if (leido == 'i')
     {
+        printf("holaa\n");
         strcpy(e->lexema, devolverPalabra());
         e->componenteLexico = IMAGINARIOS;
+        printf("holaa\n");
     }
     else
     {
@@ -191,6 +204,7 @@ void puntoFlotante(char caracter, tipoelem *e)
         strcpy(e->lexema, devolverPalabra());
         e->componenteLexico = FLOTANTES;
     }
+
 }
 
 void cadenas(tipoelem *e)
@@ -200,6 +214,16 @@ void cadenas(tipoelem *e)
     do
     {
         leido = siguienteCaracter();
+
+        if(leido == '/'){
+            leido = siguienteCaracter();
+
+            if(leido == '"'){
+                leido = siguienteCaracter();
+                continue;
+            }
+        }
+
     } while (leido != '"');
 
     // actualizar elemento

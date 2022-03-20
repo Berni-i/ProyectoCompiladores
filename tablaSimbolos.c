@@ -41,7 +41,27 @@ void inicializarTabla(){
     }
 
     imprimir(tablaSimbolos);
+    printf("\n\n");
 
+}
+
+int devolverComponente(char *lexema){
+    tipoelem e;
+
+    e.componenteLexico = -1;
+
+    buscar_nodo(tablaSimbolos, lexema, &e);
+
+    if(e.componenteLexico != -1){
+        return e.componenteLexico;
+    }else{
+        e.componenteLexico = ID;
+        strcpy(e.lexema, lexema);
+
+        insertar(&tablaSimbolos, e);
+
+        return ID;
+    }
 }
 
 void destruirTabla(){
