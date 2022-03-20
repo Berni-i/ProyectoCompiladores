@@ -12,12 +12,13 @@
 #define DOSPUNTOSIGUAL 508
 #define MASIGUAL 509
 #define FLECHAIZQUIERDA 510
-#define CADENAS 511
+#define RETORNO 511
 
 //definición de literales
-#define ENTERO 512
-#define FLOTANTES 513
-
+#define CADENAS 512
+#define ENTERO 513
+#define FLOTANTES 514
+#define IMAGINARIOS 515
 //definición del tamaño máximo de la cadena
 #define TAMCADENA 32
 

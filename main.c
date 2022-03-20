@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "tablaSimbolos.h"
 #include "sistemaDeEntrada.h"
+#include "analizadorSintactico.h"
 
 //declaración del fichero con el código fuente
 FILE *fuente;
@@ -19,6 +20,7 @@ int main(int argc, char const *argv[])
 
     //COMENZAR BUCLE
     //llamar a la función del analizador sintáctico.
+    comenzarLectura();
 
 
 

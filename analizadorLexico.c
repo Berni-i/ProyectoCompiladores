@@ -3,15 +3,13 @@
 #include <string.h>
 #include <stdlib.h>
 
-
 void cadenaAlfanumerica(char caracter, tipoelem *e);
 
 void numeros(char caracter, tipoelem *e);
 
 void operadoresVariosDigitos(char caracter, tipoelem *e);
 
-void puntoFlotante(char caracter);
-
+void puntoFlotante(char caracter, tipoelem *e);
 
 tipoelem *siguienteElemento()
 {
@@ -21,11 +19,17 @@ tipoelem *siguienteElemento()
     tipoelem *e;
     e = malloc(sizeof(tipoelem));
 
-    // saltar los espacios
-    while (caracter == 32)
+    if (caracter == EOF)
     {
-        caracter = siguienteCaracter();
+        free(e);
+        return NULL;
+    }
+
+    // saltar los espacios
+    while (caracter == 32 || caracter == '\n')
+    {
         saltarCaracter(); // mandar inicio a la posición de delantero
+        caracter = siguienteCaracter();
     }
 
     // comprobar si se trata de una cadena alfanumérica
@@ -86,12 +90,11 @@ void numeros(char caracter, tipoelem *e)
     if (caracter == 36)
     {
         // PUNTO FLOTANTE EMPEZANDO POR PUNTO
-        puntoFlotante(leido);
+        puntoFlotante(leido, e);
     }
     else if (caracter >= 48 && caracter <= 57)
     {
         // EMPEZANDO POR DÍGITOS
-
         while (leido >= 48 && leido <= 57)
         {
             leido = siguienteCaracter();
@@ -100,22 +103,32 @@ void numeros(char caracter, tipoelem *e)
         if (leido == '.')
         {
             // PUNTO FLOTANTE
-            puntoFlotante(leido);
-        }else{
-
+            puntoFlotante(leido, e);
         }
-    }
-
-    if (leido == 36)
-    { // decimal
-        leido = siguienteCaracter();
-
-        while ((caracter >= 48 && caracter <= 57))
+        else if ((caracter == 0) && (leido == 'x' || leido == 'X'))
         {
+            // HEXADECIMAL
+            while ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
+            {
+                leido = siguienteCaracter();
+            }
+
+            // actualizar elemento
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = ENTERO;
         }
-    }
-    else if (leido == 'x')
-    { //
+        else if (leido == 'i')
+        {
+            // IMAGINARIO
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = IMAGINARIOS;
+        }
+        else
+        {
+            // actualizar elemento
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = ENTERO;
+        }
     }
 }
 
@@ -124,10 +137,10 @@ void operadoresVariosDigitos(char caracter, tipoelem *e)
     // función para leer cadenas alfanuméricas
 }
 
-void puntoFlotante(char caracter)
+void puntoFlotante(char caracter, tipoelem *e)
 {
 
-    char leido = caracter;
+    char leido = siguienteCaracter();
 
     // leer números
     while (leido >= 48 && leido <= 57)
@@ -157,10 +170,18 @@ void puntoFlotante(char caracter)
         }
     }
 
-    // devolver el último caracter que se haya leido
-    devolverCaracter();
+    if (leido == 'i')
+    {
+        strcpy(e->lexema, devolverPalabra());
+        e->componenteLexico = IMAGINARIOS;
+    }
+    else
+    {
+        // devolver el último caracter que se haya leido
+        devolverCaracter();
 
-    // actualizar elemento
-    strcpy(e->lexema, devolverPalabra());
-    e->componenteLexico = FLOTANTES;
+        // actualizar elemento
+        strcpy(e->lexema, devolverPalabra());
+        e->componenteLexico = FLOTANTES;
+    }
 }
