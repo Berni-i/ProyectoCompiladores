@@ -57,7 +57,7 @@ tipoelem *siguienteElemento()
     }
     else
     { // lexemas que solo contengan un caracter como +, -, )...
-        strcpy(e->lexema, (char *)&caracter);
+        strcpy(e->lexema, devolverPalabra());
         e->componenteLexico = caracter;
         saltarCaracter();
     }
