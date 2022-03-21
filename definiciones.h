@@ -20,6 +20,7 @@
 #define FLOTANTES 514
 #define IMAGINARIOS 515
 
+//definición de identificadores
 #define ID 516
 
 //definición del tamaño máximo de la cadena

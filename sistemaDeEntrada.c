@@ -78,7 +78,7 @@ char siguienteCaracter()
             cargarBuffer(b1);
             delantero = b1;
             caracter = *b1;
-            
+
             //printf("delantero = %c inicioaa = %c\n", *delantero, *inicio);
         }
         else
@@ -143,7 +143,7 @@ char *devolverPalabra()
 
     //printf("uno\n");
 
-    
+
 
     //sino se queda en eof si acaba el buffer justo
     if (*inicio == EOF)

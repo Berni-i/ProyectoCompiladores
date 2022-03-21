@@ -22,7 +22,7 @@ tipoelem *siguienteElemento()
     //sleep(1);
 
     tipoelem *e;
-    
+
 
     // saltar los espacios
     while (caracter == 32 || caracter == '\n')
@@ -35,7 +35,7 @@ tipoelem *siguienteElemento()
     if (caracter == EOF)
     {
         printf("Final analizador léxico\n");
-        return NULL; 
+        return NULL;
     }
 
     e = malloc(sizeof(tipoelem));
@@ -60,6 +60,30 @@ tipoelem *siguienteElemento()
     else if (caracter == '"')
     {
         cadenas(e);
+    }
+    else if(caracter == '/'){
+        caracter = siguienteCaracter();
+
+        if(caracter == '/'){
+            while(caracter != '\n'){
+                caracter = siguienteCaracter();
+            }
+        }else if(caracter == '*'){
+            while(caracter != EOF){
+                caracter = siguienteCaracter();
+
+                if(caracter == '*'){
+                    caracter = siguienteCaracter();
+
+                    if(caracter == '/') break;
+                }
+            }
+        }
+        else{
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = caracter;
+            saltarCaracter();
+        }
     }
     else
     { // lexemas que solo contengan un caracter como +, -, )...
@@ -88,11 +112,12 @@ void cadenaAlfanumerica(char caracter, tipoelem *e)
     devolverCaracter();
 
     // actualizar elemento
-    strcpy(e->lexema, devolverPalabra());
+    strcpy(e->lexema, devolverPalabra()); //mirar strcpy
 
     // preguntar a la tabla de símbolos de qué se trata
     e->componenteLexico = devolverComponente(e->lexema);
 }
+
 
 void numeros(char caracter, tipoelem *e)
 {
@@ -126,6 +151,8 @@ void numeros(char caracter, tipoelem *e)
                 leido = siguienteCaracter();
             }
 
+            devolverCaracter();
+
             // actualizar elemento
             strcpy(e->lexema, devolverPalabra());
             e->componenteLexico = ENTERO;
@@ -139,16 +166,72 @@ void numeros(char caracter, tipoelem *e)
         }
         else
         {
+
+            devolverCaracter();
+
             // actualizar elemento
             strcpy(e->lexema, devolverPalabra());
             e->componenteLexico = ENTERO;
         }
     }
+
 }
 
 void operadoresVariosDigitos(char caracter, tipoelem *e)
 {
-    // función para leer cadenas alfanuméricas
+    char leido;
+
+    //:=
+    if(caracter == ':'){
+        leido = siguienteCaracter();
+
+        if(leido == '='){
+            // actualizar elemento
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = DOSPUNTOSIGUAL;
+        }else{
+            devolverCaracter();
+
+            // actualizar elemento
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = ':';
+        }
+    }
+
+    //+=
+    if(caracter == '+'){
+        leido = siguienteCaracter();
+
+        if(leido == '='){
+            // actualizar elemento
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = MASIGUAL;
+        }else{
+            devolverCaracter();
+
+            // actualizar elemento
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = '+';
+        }
+    }
+
+
+    //<-
+    if(caracter == '<'){
+        leido = siguienteCaracter();
+
+        if(leido == '-'){
+            // actualizar elemento
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = FLECHAIZQUIERDA;
+        }else{
+            devolverCaracter();
+
+            // actualizar elemento
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = '<';
+        }
+    }
 }
 
 void puntoFlotante(char caracter, tipoelem *e)
@@ -190,10 +273,10 @@ void puntoFlotante(char caracter, tipoelem *e)
 
     if (leido == 'i')
     {
-        printf("holaa\n");
+        //printf("holaa\n");
         strcpy(e->lexema, devolverPalabra());
         e->componenteLexico = IMAGINARIOS;
-        printf("holaa\n");
+        //printf("holaa\n");
     }
     else
     {
