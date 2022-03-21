@@ -40,6 +40,45 @@ tipoelem *siguienteElemento()
 
     e = malloc(sizeof(tipoelem));
 
+    if(caracter == '/'){
+        caracter = siguienteCaracter();
+
+        if(caracter == '/'){
+            while(caracter != '\n'){
+                caracter = siguienteCaracter();
+                saltarCaracter();
+                
+            }
+
+            
+
+
+
+        }else if(caracter == '*'){
+            while(caracter != EOF){
+                caracter = siguienteCaracter();
+
+                saltarCaracter();
+
+                if(caracter == '*'){
+                    caracter = siguienteCaracter();
+                    
+
+                    if(caracter == '/') {
+                        caracter = siguienteCaracter();
+                        break;
+                    }
+                }
+            }
+        }
+        else{
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = caracter;
+            saltarCaracter();
+        }
+    }
+
+
     // comprobar si se trata de una cadena alfanumérica
     // un caracter del alfabeto o una barra baja
     if (((caracter >= 65 && caracter <= 90) || (caracter >= 97 && caracter <= 122)) || caracter == 95)
@@ -60,30 +99,6 @@ tipoelem *siguienteElemento()
     else if (caracter == '"')
     {
         cadenas(e);
-    }
-    else if(caracter == '/'){
-        caracter = siguienteCaracter();
-
-        if(caracter == '/'){
-            while(caracter != '\n'){
-                caracter = siguienteCaracter();
-            }
-        }else if(caracter == '*'){
-            while(caracter != EOF){
-                caracter = siguienteCaracter();
-
-                if(caracter == '*'){
-                    caracter = siguienteCaracter();
-
-                    if(caracter == '/') break;
-                }
-            }
-        }
-        else{
-            strcpy(e->lexema, devolverPalabra());
-            e->componenteLexico = caracter;
-            saltarCaracter();
-        }
     }
     else
     { // lexemas que solo contengan un caracter como +, -, )...
@@ -138,16 +153,21 @@ void numeros(char caracter, tipoelem *e)
             leido = siguienteCaracter();
         }
 
+        //printf("leido es igual a %c y caracter es igual a %c", leido, caracter);
+
         if (leido == '.')
         {
             // PUNTO FLOTANTE
             puntoFlotante(leido, e);
         }
-        else if ((caracter == 0) && (leido == 'x' || leido == 'X'))
+        else if ((caracter == '0') && (leido == 'x' || leido == 'X'))
         {
             // HEXADECIMAL
+            leido = siguienteCaracter();
+        
             while ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
             {
+
                 leido = siguienteCaracter();
             }
 
@@ -273,10 +293,15 @@ void puntoFlotante(char caracter, tipoelem *e)
 
     if (leido == 'i')
     {
+
+        leido = siguienteCaracter();
+
+        //devolverCaracter();
+
         //printf("holaa\n");
         strcpy(e->lexema, devolverPalabra());
         e->componenteLexico = IMAGINARIOS;
-        //printf("holaa\n");
+        printf("holaa\n\n\n\n\n\n\n");
     }
     else
     {

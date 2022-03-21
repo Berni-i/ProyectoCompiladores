@@ -66,6 +66,7 @@ char siguienteCaracter()
     {
 
         //printf("delantero = %c inicio = %c\n", *delantero, *inicio);
+
         if (delantero == (b1 + TAMCADENA))
         {
             cargarBuffer(b2);
