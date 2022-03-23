@@ -15,6 +15,7 @@ int main(int argc, char const *argv[])
     fuente = fopen("concurrentSum.go", "r");
 
     inicializarTabla();
+    imprimirTabla();
     iniciarBuffer(fuente);
     
 
@@ -23,7 +24,7 @@ int main(int argc, char const *argv[])
     comenzarLectura();
 
 
-
+    imprimirTabla();
     //cerrar el fichero
     fclose(fuente);
     //destruir la tabla de símbolos

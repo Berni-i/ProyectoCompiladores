@@ -16,6 +16,12 @@ void imprimir(abb A) {
 	}
 }
 
+void imprimirTabla(){
+    printf("\n");
+    imprimir(tablaSimbolos);
+    printf("\n");
+}
+
 //función para iniciar la tabla con las palabras reservadas
 void inicializarTabla(){
 
@@ -39,9 +45,6 @@ void inicializarTabla(){
         insertar(&tablaSimbolos, elemento);
 
     }
-
-    imprimir(tablaSimbolos);
-    printf("\n\n");
 
 }
 

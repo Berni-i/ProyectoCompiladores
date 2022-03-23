@@ -28,12 +28,12 @@ void cargarBuffer(char *buffer)
             *(buffer + leidos) = EOF;
         }
 
-        /*printf("\nimpresión del buffer\n");
+        printf("\nimpresión del buffer\n");
         for (int i = 0; i < TAMCADENA; i++)
         {
             printf("%c", *(buffer + i));
         }
-        printf("\n\n");*/
+        printf("\n\n");
     }
     else
     {
@@ -59,7 +59,7 @@ char siguienteCaracter()
 {
     char caracter = *delantero;
 
-    //printf("sig caracter delantero = %c inicio = %c\n", *delantero, *inicio);
+    printf("sig caracter delantero = %c inicio = %c\n", *delantero, *inicio);
 
     // comprobar si se encuentra en uno de los fines de fichero
     if (caracter == EOF)
@@ -88,8 +88,11 @@ char siguienteCaracter()
             return EOF;
         }
     }else{
+        printf("avanza 1\n");
         delantero += 1;
     }
+
+    //if(*inicio == EOF) inicio = delantero;
 
     //printf("caracter %c\n",caracter);
 

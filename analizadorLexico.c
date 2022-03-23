@@ -18,18 +18,18 @@ tipoelem *siguienteElemento()
 {
     // leer caracter
     char caracter = siguienteCaracter();
+    printf("caracter es igual a %c\n", caracter);
 
-    //sleep(1);
+    // sleep(1);
 
     tipoelem *e;
-
 
     // saltar los espacios
     while (caracter == 32 || caracter == '\n')
     {
         saltarCaracter(); // mandar inicio a la posición de delantero
         caracter = siguienteCaracter();
-        //printf("leido espacio o barra n\n");
+        // printf("leido espacio o barra n\n");
     }
 
     if (caracter == EOF)
@@ -40,44 +40,58 @@ tipoelem *siguienteElemento()
 
     e = malloc(sizeof(tipoelem));
 
-    if(caracter == '/'){
+    if (caracter == '/')
+    {
         caracter = siguienteCaracter();
 
-        if(caracter == '/'){
-            while(caracter != '\n'){
+        if (caracter == '/')
+        {
+            while (caracter != '\n')
+            {
                 caracter = siguienteCaracter();
                 saltarCaracter();
-                
             }
-
-            
-
-
-
-        }else if(caracter == '*'){
-            while(caracter != EOF){
+        }
+        else if (caracter == '*')
+        {
+            while (caracter != EOF)
+            {
                 caracter = siguienteCaracter();
 
                 saltarCaracter();
 
-                if(caracter == '*'){
+                if (caracter == '*')
+                {
                     caracter = siguienteCaracter();
-                    
+                    saltarCaracter();
 
-                    if(caracter == '/') {
+                    if (caracter == '/')
+                    {
                         caracter = siguienteCaracter();
+                        saltarCaracter();
                         break;
+                    }
+                    else
+                    {
+                        continue;
                     }
                 }
             }
         }
-        else{
+        else
+        {
             strcpy(e->lexema, devolverPalabra());
             e->componenteLexico = caracter;
             saltarCaracter();
         }
     }
 
+    while (caracter == 32 || caracter == '\n')
+    {
+        saltarCaracter(); // mandar inicio a la posición de delantero
+        caracter = siguienteCaracter();
+        // printf("leido espacio o barra n\n");
+    }
 
     // comprobar si se trata de una cadena alfanumérica
     // un caracter del alfabeto o una barra baja
@@ -107,7 +121,7 @@ tipoelem *siguienteElemento()
         saltarCaracter();
     }
 
-    //printf("%s\n", e->lexema);
+    // printf("%s\n", e->lexema);
 
     return e;
 }
@@ -127,12 +141,11 @@ void cadenaAlfanumerica(char caracter, tipoelem *e)
     devolverCaracter();
 
     // actualizar elemento
-    strcpy(e->lexema, devolverPalabra()); //mirar strcpy
+    strcpy(e->lexema, devolverPalabra()); // mirar strcpy
 
     // preguntar a la tabla de símbolos de qué se trata
     e->componenteLexico = devolverComponente(e->lexema);
 }
-
 
 void numeros(char caracter, tipoelem *e)
 {
@@ -140,10 +153,21 @@ void numeros(char caracter, tipoelem *e)
     // componentes léxicos para cada cada tipo de numero
     char leido = siguienteCaracter();
 
-    if (caracter == 36)
+    if (caracter == '.')
     {
         // PUNTO FLOTANTE EMPEZANDO POR PUNTO
-        puntoFlotante(leido, e);
+        printf("leido sería %c y caracter sería %c\n\n\n\n\n", leido, caracter);
+
+        if((leido >= 48 && leido <= 57) || leido == 'e' || leido == 'E'){
+            puntoFlotante(leido, e);
+        }else{
+            devolverCaracter();
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = caracter;
+            //saltarCaracter();
+        }
+        
+        printf("holaa");
     }
     else if (caracter >= 48 && caracter <= 57)
     {
@@ -153,7 +177,7 @@ void numeros(char caracter, tipoelem *e)
             leido = siguienteCaracter();
         }
 
-        //printf("leido es igual a %c y caracter es igual a %c", leido, caracter);
+        // printf("leido es igual a %c y caracter es igual a %c", leido, caracter);
 
         if (leido == '.')
         {
@@ -164,7 +188,7 @@ void numeros(char caracter, tipoelem *e)
         {
             // HEXADECIMAL
             leido = siguienteCaracter();
-        
+
             while ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
             {
 
@@ -180,9 +204,31 @@ void numeros(char caracter, tipoelem *e)
         else if (leido == 'i')
         {
             // IMAGINARIO
-            //printf("holaaa");
+            // printf("holaaa");
             strcpy(e->lexema, devolverPalabra());
             e->componenteLexico = IMAGINARIOS;
+        }
+        else if (leido == 'e' || leido == 'E')
+        {
+            leido = siguienteCaracter();
+
+            if (leido == '+' || leido == '-')
+            {
+                leido = siguienteCaracter();
+            }
+
+            if (leido >= 48 && leido <= 57)
+            {
+                while (leido >= 48 && leido <= 57)
+                {
+                    leido = siguienteCaracter();
+                }
+            }
+
+            devolverCaracter();
+
+            strcpy(e->lexema, devolverPalabra());
+            e->componenteLexico = FLOTANTES;
         }
         else
         {
@@ -194,7 +240,6 @@ void numeros(char caracter, tipoelem *e)
             e->componenteLexico = ENTERO;
         }
     }
-
 }
 
 void operadoresVariosDigitos(char caracter, tipoelem *e)
@@ -202,14 +247,18 @@ void operadoresVariosDigitos(char caracter, tipoelem *e)
     char leido;
 
     //:=
-    if(caracter == ':'){
+    if (caracter == ':')
+    {
         leido = siguienteCaracter();
 
-        if(leido == '='){
+        if (leido == '=')
+        {
             // actualizar elemento
             strcpy(e->lexema, devolverPalabra());
             e->componenteLexico = DOSPUNTOSIGUAL;
-        }else{
+        }
+        else
+        {
             devolverCaracter();
 
             // actualizar elemento
@@ -219,14 +268,18 @@ void operadoresVariosDigitos(char caracter, tipoelem *e)
     }
 
     //+=
-    if(caracter == '+'){
+    if (caracter == '+')
+    {
         leido = siguienteCaracter();
 
-        if(leido == '='){
+        if (leido == '=')
+        {
             // actualizar elemento
             strcpy(e->lexema, devolverPalabra());
             e->componenteLexico = MASIGUAL;
-        }else{
+        }
+        else
+        {
             devolverCaracter();
 
             // actualizar elemento
@@ -235,16 +288,19 @@ void operadoresVariosDigitos(char caracter, tipoelem *e)
         }
     }
 
-
     //<-
-    if(caracter == '<'){
+    if (caracter == '<')
+    {
         leido = siguienteCaracter();
 
-        if(leido == '-'){
+        if (leido == '-')
+        {
             // actualizar elemento
             strcpy(e->lexema, devolverPalabra());
             e->componenteLexico = FLECHAIZQUIERDA;
-        }else{
+        }
+        else
+        {
             devolverCaracter();
 
             // actualizar elemento
@@ -268,7 +324,7 @@ void puntoFlotante(char caracter, tipoelem *e)
     if (leido == 'E' || leido == 'e')
     {
         leido = siguienteCaracter();
-        //printf("holeeee\n");
+        printf("holeeee\n");
 
         if (leido == '+' || leido == '-')
         {
@@ -280,25 +336,26 @@ void puntoFlotante(char caracter, tipoelem *e)
             while (leido >= 48 && leido <= 57)
             {
                 leido = siguienteCaracter();
-                //printf("holiiiii\n");
+                // printf("holiiiii\n");
             }
+
         }
         else
         {
-            //printf("ooooooº\n");
+            // printf("ooooooº\n");
         }
     }
 
-    //printf("holiixxxiii %c\n", leido);
+    // printf("holiixxxiii %c\n", leido);
 
     if (leido == 'i')
     {
 
         leido = siguienteCaracter();
 
-        //devolverCaracter();
+        // devolverCaracter();
 
-        //printf("holaa\n");
+        // printf("holaa\n");
         strcpy(e->lexema, devolverPalabra());
         e->componenteLexico = IMAGINARIOS;
         printf("holaa\n\n\n\n\n\n\n");
@@ -312,7 +369,6 @@ void puntoFlotante(char caracter, tipoelem *e)
         strcpy(e->lexema, devolverPalabra());
         e->componenteLexico = FLOTANTES;
     }
-
 }
 
 void cadenas(tipoelem *e)
@@ -323,16 +379,19 @@ void cadenas(tipoelem *e)
     {
         leido = siguienteCaracter();
 
-        if(leido == '/'){
+        if (leido == '\\')
+        {
             leido = siguienteCaracter();
 
-            if(leido == '"'){
-                leido = siguienteCaracter();
+            if (leido == '"')
+            {
                 continue;
             }
         }
 
-    } while (leido != '"');
+        if(leido == '"') break;
+
+    } while (leido != EOF);
 
     // actualizar elemento
     strcpy(e->lexema, devolverPalabra());
