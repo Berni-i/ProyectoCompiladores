@@ -24,6 +24,7 @@ void cargarBuffer(char *buffer)
     {
         leidos = fread(buffer, 1, TAMCADENA, fichero);
 
+        //introducir el caracter EOF porque fread no lo introduce por defecto
         if(leidos < TAMCADENA){
             *(buffer + leidos) = EOF;
         }
@@ -59,7 +60,7 @@ char siguienteCaracter()
 {
     char caracter = *delantero;
 
-    printf("sig caracter delantero = %c inicio = %c\n", *delantero, *inicio);
+    //printf("sig caracter delantero = %c inicio = %c\n", *delantero, *inicio);
 
     // comprobar si se encuentra en uno de los fines de fichero
     if (caracter == EOF)
@@ -72,13 +73,16 @@ char siguienteCaracter()
             cargarBuffer(b2);
             delantero = b2;
             caracter = *b2;
-            //printf("delantero = %c inicioeee = %c\n", *delantero, *inicio);
+            delantero += 1;
+            //printf("después de la carga delantero = %c inicioeee = %c\n", *delantero, *inicio);
         }
         else if (delantero == (b2 + TAMCADENA))
         {
             cargarBuffer(b1);
             delantero = b1;
             caracter = *b1;
+            delantero += 1;
+            //delantero+=1;
 
             //printf("delantero = %c inicioaa = %c\n", *delantero, *inicio);
         }
@@ -88,7 +92,7 @@ char siguienteCaracter()
             return EOF;
         }
     }else{
-        printf("avanza 1\n");
+        //printf("avanza 1\n");
         delantero += 1;
     }
 
@@ -180,6 +184,8 @@ void saltarCaracter()
 void devolverCaracter()
 {
 
+    delantero -= 1;
+    //printf("chao\n");
 
     // función que servirá para devolver un caracter
     if (delantero == b1)
@@ -193,10 +199,5 @@ void devolverCaracter()
         delantero = (b1 + TAMCADENA);
         cargar = 0;
         //printf("adios\n");
-    }
-    else
-    {
-        delantero -= 1;
-        //printf("chao\n");
     }
 }

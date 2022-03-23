@@ -18,7 +18,7 @@ tipoelem *siguienteElemento()
 {
     // leer caracter
     char caracter = siguienteCaracter();
-    printf("caracter es igual a %c\n", caracter);
+    //printf("caracter es igual a %c\n", caracter);
 
     // sleep(1);
 
@@ -80,9 +80,15 @@ tipoelem *siguienteElemento()
         }
         else
         {
+            devolverCaracter();
+
+            caracter = '/';
+
             strcpy(e->lexema, devolverPalabra());
+            printf("%s\n", e->lexema);
             e->componenteLexico = caracter;
-            saltarCaracter();
+
+            return e;
         }
     }
 
@@ -156,7 +162,7 @@ void numeros(char caracter, tipoelem *e)
     if (caracter == '.')
     {
         // PUNTO FLOTANTE EMPEZANDO POR PUNTO
-        printf("leido sería %c y caracter sería %c\n\n\n\n\n", leido, caracter);
+        //printf("leido sería %c y caracter sería %c\n\n\n\n\n", leido, caracter);
 
         if((leido >= 48 && leido <= 57) || leido == 'e' || leido == 'E'){
             puntoFlotante(leido, e);
@@ -166,8 +172,8 @@ void numeros(char caracter, tipoelem *e)
             e->componenteLexico = caracter;
             //saltarCaracter();
         }
-        
-        printf("holaa");
+
+        //printf("holaa");
     }
     else if (caracter >= 48 && caracter <= 57)
     {
@@ -324,7 +330,7 @@ void puntoFlotante(char caracter, tipoelem *e)
     if (leido == 'E' || leido == 'e')
     {
         leido = siguienteCaracter();
-        printf("holeeee\n");
+        //printf("holeeee\n");
 
         if (leido == '+' || leido == '-')
         {
@@ -353,12 +359,12 @@ void puntoFlotante(char caracter, tipoelem *e)
 
         leido = siguienteCaracter();
 
-        // devolverCaracter();
+        devolverCaracter();
 
         // printf("holaa\n");
         strcpy(e->lexema, devolverPalabra());
         e->componenteLexico = IMAGINARIOS;
-        printf("holaa\n\n\n\n\n\n\n");
+        //printf("holaa\n\n\n\n\n\n\n");
     }
     else
     {
