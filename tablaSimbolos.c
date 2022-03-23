@@ -1,6 +1,7 @@
 #include "abb.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 abb tablaSimbolos;
 
@@ -38,6 +39,9 @@ void inicializarTabla(){
 
         //crear un struct por que contenga lexema y componente léxico
         tipoelem elemento;
+
+        elemento.lexema = malloc(TAMCADENA+1);
+
         strcpy(elemento.lexema, nombres[i]);
         elemento.componenteLexico = definiciones[i];
 
@@ -51,6 +55,8 @@ void inicializarTabla(){
 int devolverComponente(char *lexema){
     tipoelem e;
 
+    
+
     e.componenteLexico = -1;
 
     buscar_nodo(tablaSimbolos, lexema, &e);
@@ -59,6 +65,9 @@ int devolverComponente(char *lexema){
         return e.componenteLexico;
     }else{
         e.componenteLexico = ID;
+
+        e.lexema = malloc(strlen(lexema)+1);
+        
         strcpy(e.lexema, lexema);
 
         insertar(&tablaSimbolos, e);

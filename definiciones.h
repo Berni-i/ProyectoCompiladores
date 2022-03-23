@@ -28,6 +28,6 @@
 
 //definición de las estrcuturas con las que trabajará el árbol de la tabla de símbolos
 typedef struct {
-	char lexema[TAMCADENA];
+	char *lexema;
 	int componenteLexico;
 } tipoelem; //definir tipoelem aquí para no modificar el .c
