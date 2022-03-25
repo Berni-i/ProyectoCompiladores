@@ -83,6 +83,8 @@ tipoelem *siguienteElemento()
         {
             caracter = '/';
 
+            devolverCaracter();
+
             e->lexema = devolverPalabra();
             e->componenteLexico = caracter;
             saltarCaracter();
