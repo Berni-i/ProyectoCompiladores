@@ -29,12 +29,12 @@ void cargarBuffer(char *buffer)
             *(buffer + leidos) = EOF;
         }
 
-        printf("\nimpresión del buffer\n");
+        /*printf("\nimpresión del buffer\n");
         for (int i = 0; i < TAMCADENA; i++)
         {
             printf("%c", *(buffer + i));
         }
-        printf("\n\n");
+        printf("\n\n");*/
     }
     else
     {
@@ -108,12 +108,13 @@ char siguienteCaracter()
 char *devolverPalabra()
 {
     int i = 0, tam = 8;
-    char *palabra = malloc(tam);
+    char *palabra = malloc(tam+1); printf("%p\n", palabra);
 
     //si se retrasa una posición en el momento de cambiar de buffer estarán en la misma posición
     //los dos punteros
     if(inicio == delantero){
         *palabra = *delantero;
+        *(palabra + 1) = '\0';
 
        inicio++;
        delantero++;
@@ -137,10 +138,11 @@ char *devolverPalabra()
 
         if(i == tam){
             tam += 8;
-            palabra = realloc(palabra, tam);
+            palabra = realloc(palabra, tam+1);
         }
 
         *(palabra + i) = *inicio;
+        *(palabra + i + 1) = '\0';
 
         //sino nunca se llega a la primera posicion
         if(inicio == delantero) break;
@@ -149,7 +151,6 @@ char *devolverPalabra()
         i++;
     }
 
-    //printf("uno\n");
 
 
 

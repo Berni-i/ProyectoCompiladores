@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
     inicializarTabla();
     imprimirTabla();
     iniciarBuffer(fuente);
-    
+
 
     //COMENZAR BUCLE
     //llamar a la función del analizador sintáctico.

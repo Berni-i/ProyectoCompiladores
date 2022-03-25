@@ -55,8 +55,6 @@ void inicializarTabla(){
 int devolverComponente(char *lexema){
     tipoelem e;
 
-    
-
     e.componenteLexico = -1;
 
     buscar_nodo(tablaSimbolos, lexema, &e);
@@ -67,7 +65,7 @@ int devolverComponente(char *lexema){
         e.componenteLexico = ID;
 
         e.lexema = malloc(strlen(lexema)+1);
-        
+
         strcpy(e.lexema, lexema);
 
         insertar(&tablaSimbolos, e);

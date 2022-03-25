@@ -31,6 +31,10 @@ void _destruir_elem(tipoelem *E) {
     /*if(E->tareas != NULL){
         destruir_cola(&E->tareas); //Destrucción de la cola de tareas
     }*/
+
+    if(E->lexema != NULL){
+        free(E->lexema);
+    }
 }
 
 //OPERACIONES DE CREACIÓN Y DESTRUCCIÓN
