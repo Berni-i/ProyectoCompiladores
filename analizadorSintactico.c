@@ -10,7 +10,7 @@ void comenzarLectura(){
     e = siguienteElemento();
 
     while(e != NULL){
-        //*(e->lexema + strlen(e->lexema)) = '\0';
+        
         printf("<%s, %d>\n", e->lexema, e->componenteLexico);
 
         free(e->lexema);

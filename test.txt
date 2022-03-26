@@ -134,7 +134,8 @@ var, 504
 <., 46>
 <Println, 516>
 <(, 40>
-<"Partial results and \"Total\" sum:", 512>
+ERROR: Se ha sobrepasado el tamaño máximo de lexema. Tamaño máximo: 16
+<al results and \"Total\" sum:", 512>
 <), 41>
 <;, 59>
 <fmt, 516>

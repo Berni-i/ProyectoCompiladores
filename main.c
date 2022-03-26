@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "tablaSimbolos.h"
 #include "sistemaDeEntrada.h"
 #include "analizadorSintactico.h"
 
-//declaración del fichero con el código fuente
+//fichero con el código fuente
 FILE *fuente;
 
 int main(int argc, char const *argv[])
@@ -23,11 +24,13 @@ int main(int argc, char const *argv[])
     //llamar a la función del analizador sintáctico.
     comenzarLectura();
 
-
+    //LIBERAR ESTRUCTURAS DE DATOS
     imprimirTabla();
     //cerrar el fichero
     fclose(fuente);
     //destruir la tabla de símbolos
     destruirTabla();
+    
+    
     return 0;
 }

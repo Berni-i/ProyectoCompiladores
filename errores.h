@@ -1,0 +1,1 @@
+void mostrarError(int codigo);
