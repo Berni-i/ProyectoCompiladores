@@ -40,7 +40,7 @@ void inicializarTabla(){
         //crear un struct por que contenga lexema y componente léxico
         tipoelem elemento;
 
-        elemento.lexema = malloc(TAMCADENA+1);
+        elemento.lexema = malloc(strlen(nombres[i])+1);
 
         strcpy(elemento.lexema, nombres[i]);
         elemento.componenteLexico = definiciones[i];

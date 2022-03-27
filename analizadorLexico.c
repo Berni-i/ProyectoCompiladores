@@ -14,11 +14,9 @@ void puntoFlotante(char caracter, tipoelem *e);
 
 void cadenas(tipoelem *e);
 
-
 tipoelem *siguienteElemento()
 {
     tipoelem *e;
-    
 
     // leer caracter
     char caracter = siguienteCaracter();
@@ -43,7 +41,7 @@ tipoelem *siguienteElemento()
 
         if (caracter == '/')
         {
-            //saltar hasta el final de línea
+            // saltar hasta el final de línea
             while (caracter != '\n')
             {
                 caracter = siguienteCaracter();
@@ -57,7 +55,7 @@ tipoelem *siguienteElemento()
                 caracter = siguienteCaracter();
                 saltarCaracter();
 
-                //saltar hasta que encuentre un */
+                // saltar hasta que encuentre un */
                 if (caracter == '*')
                 {
                     caracter = siguienteCaracter();
@@ -74,10 +72,10 @@ tipoelem *siguienteElemento()
         }
         else
         {
-            //reservar memoria después de comprobar que no es un malloc
+            // reservar memoria después de comprobar que no es un malloc
             e = malloc(sizeof(tipoelem));
 
-            //devolver / si no se trata de un comentario
+            // devolver / si no se trata de un comentario
             caracter = '/';
 
             devolverCaracter();
@@ -90,16 +88,15 @@ tipoelem *siguienteElemento()
         }
     }
 
-    //reservar memoria después de comprobar que no es un malloc
+    // reservar memoria después de comprobar que no es un malloc
     e = malloc(sizeof(tipoelem));
 
-    //volver a saltar los espacios
+    // volver a saltar los espacios
     while (caracter == 32 || caracter == '\n')
     {
         saltarCaracter();
         caracter = siguienteCaracter();
     }
-
 
     // comprobar si se trata de una cadena alfanumérica
     // un caracter del alfabeto o una barra baja
@@ -135,7 +132,7 @@ tipoelem *siguienteElemento()
 // función para leer cadenas alfanuméricas
 void cadenaAlfanumerica(char caracter, tipoelem *e)
 {
-    
+
     char leido = siguienteCaracter();
 
     while ((leido >= 65 && leido <= 90) || (leido >= 97 && leido <= 122) || (leido >= 48 && leido <= 57) || leido == 95)
@@ -154,7 +151,7 @@ void cadenaAlfanumerica(char caracter, tipoelem *e)
     e->componenteLexico = devolverComponente(e->lexema);
 }
 
-//función para leer números
+// función para leer números
 void numeros(char caracter, tipoelem *e)
 {
 
@@ -169,17 +166,16 @@ void numeros(char caracter, tipoelem *e)
         }
         else
         {
-            //solo se trata de un punto
+            // solo se trata de un punto
             devolverCaracter();
             e->lexema = devolverPalabra();
             e->componenteLexico = caracter;
         }
-
     }
     else if (caracter >= 48 && caracter <= 57)
     {
 
-        //Detectar hexadecimal
+        // Detectar hexadecimal
         if ((caracter == '0') && (leido == 'x' || leido == 'X'))
         {
             // HEXADECIMAL
@@ -195,16 +191,49 @@ void numeros(char caracter, tipoelem *e)
             // actualizar elemento
             e->lexema = devolverPalabra();
             e->componenteLexico = ENTERO;
-        }else{
+        }
+        // Detectar binario
+        else if ((caracter == '0') && (leido == 'b' || leido == 'B'))
+        {
+            // BINARIO
+            leido = siguienteCaracter();
+
+            while (leido == '0' || leido == '1')
+            {
+                leido = siguienteCaracter();
+            }
+
+            devolverCaracter();
+
+            // actualizar elemento
+            e->lexema = devolverPalabra();
+            e->componenteLexico = ENTERO;
+        }
+        else if ((caracter == '0') && (leido == 'o' || leido == 'O'))
+        {
+            // BINARIO
+            leido = siguienteCaracter();
+
+            while (leido >= 48 && leido <= 55)
+            {
+                leido = siguienteCaracter();
+            }
+
+            devolverCaracter();
+
+            // actualizar elemento
+            e->lexema = devolverPalabra();
+            e->componenteLexico = ENTERO;
+        }
+        else
+        {
 
             // EMPEZANDO POR DÍGITOS
-            while ((leido >= 48 && leido <= 57) || leido == '_')
+            while ((leido >= 48 && leido <= 57))
             {
 
                 leido = siguienteCaracter();
             }
-
-
 
             if (leido == '.')
             {
@@ -219,7 +248,7 @@ void numeros(char caracter, tipoelem *e)
             }
             else if (leido == 'e' || leido == 'E')
             {
-                //NÚMERO CON EXPONENTE
+                // NÚMERO CON EXPONENTE
                 leido = siguienteCaracter();
 
                 if (leido == '+' || leido == '-')
@@ -242,9 +271,9 @@ void numeros(char caracter, tipoelem *e)
             }
             else
             {
-                //ENTERO SIMPLE
+                // ENTERO SIMPLE
                 devolverCaracter();
-                
+
                 e->lexema = devolverPalabra();
                 e->componenteLexico = ENTERO;
             }
@@ -342,7 +371,7 @@ void puntoFlotante(char caracter, tipoelem *e)
         }
         else
         {
-            //error porque no tendría exponente
+            // error porque no tendría exponente
         }
     }
 
@@ -366,7 +395,7 @@ void cadenas(tipoelem *e)
 
     do
     {
-        //leer caracteres hasta que se encuentre otras comillas o EOF
+        // leer caracteres hasta que se encuentre otras comillas o EOF
         leido = siguienteCaracter();
 
         if (leido == '\\')

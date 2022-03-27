@@ -99,11 +99,28 @@ char siguienteCaracter()
 // a un estado final
 char *devolverPalabra()
 {
-    int i = 0, tam = 4;
-    char *palabra = malloc(tam+1);
+    int i = 0, tam = 0;
+    char *palabra;
 
     //reiniciar el contador
     contador = 0;
+
+
+    if(delantero >= b1 && delantero <= (b1+TAMCADENA)){
+        if(inicio >= b1 && inicio <= (b1+TAMCADENA)){
+            tam = delantero - inicio;
+        }else{
+            tam = (delantero - b1) + ((b2 + TAMCADENA) - inicio);
+        }
+    }else{
+        if(inicio >= b2 && inicio <= (b2+TAMCADENA)){
+            tam = delantero - inicio;
+        }else{
+            tam = (delantero - b2) + ((b1 + TAMCADENA) - inicio);
+        }
+    }
+
+    palabra = malloc(tam+1);
 
     //mientras se encuentran separados
     while (inicio != delantero)
@@ -124,10 +141,10 @@ char *devolverPalabra()
         if(inicio == delantero) break;
 
         //aumentar el tamaño del buffer
-        if(i == tam){
+        /*if(i == tam){
             tam += tam;
             palabra = realloc(palabra, tam+1);
-        }
+        }*/
 
         *(palabra + i) = *inicio;
         *(palabra + i + 1) = '\0';
