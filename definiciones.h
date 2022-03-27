@@ -24,7 +24,7 @@
 #define ID 516
 
 //definición del tamaño máximo de la cadena
-#define TAMCADENA 16
+#define TAMCADENA 32
 
 //definición de las estrcuturas con las que trabajará el árbol de la tabla de símbolos
 typedef struct {

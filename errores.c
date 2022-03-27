@@ -14,5 +14,6 @@ void mostrarError(int codigo){
     case 2:
         printf("No se puede acceder al archivo con el código fuente\n");
         break;
+
     }
 }

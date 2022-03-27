@@ -4,6 +4,7 @@
 #include "tablaSimbolos.h"
 #include "sistemaDeEntrada.h"
 #include "analizadorSintactico.h"
+#include "errores.h"
 
 //fichero con el código fuente
 FILE *fuente;
@@ -14,6 +15,11 @@ int main(int argc, char const *argv[])
     //INICIALIZAR ESTRUCTURAS DE DATOS
     //abrir fichero en modo lectura
     fuente = fopen("concurrentSum.go", "r");
+
+    if(fuente == NULL){
+        mostrarError(2);
+        exit(1);
+    }
 
     inicializarTabla();
     imprimirTabla();

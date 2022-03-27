@@ -178,19 +178,9 @@ void numeros(char caracter, tipoelem *e)
     }
     else if (caracter >= 48 && caracter <= 57)
     {
-        // EMPEZANDO POR DÍGITOS
-        while (leido >= 48 && leido <= 57)
-        {
-            leido = siguienteCaracter();
-        }
 
-
-        if (leido == '.')
-        {
-            // PUNTO FLOTANTE
-            puntoFlotante(leido, e);
-        }
-        else if ((caracter == '0') && (leido == 'x' || leido == 'X'))
+        //Detectar hexadecimal
+        if ((caracter == '0') && (leido == 'x' || leido == 'X'))
         {
             // HEXADECIMAL
             leido = siguienteCaracter();
@@ -205,43 +195,59 @@ void numeros(char caracter, tipoelem *e)
             // actualizar elemento
             e->lexema = devolverPalabra();
             e->componenteLexico = ENTERO;
-        }
-        else if (leido == 'i')
-        {
-            // IMAGINARIO
-            e->lexema = devolverPalabra();
-            e->componenteLexico = IMAGINARIOS;
-        }
-        else if (leido == 'e' || leido == 'E')
-        {
-            //NÚMERO CON EXPONENTE
-            leido = siguienteCaracter();
+        }else{
 
-            if (leido == '+' || leido == '-')
+            // EMPEZANDO POR DÍGITOS
+            while ((leido >= 48 && leido <= 57) || leido == '_')
             {
+
                 leido = siguienteCaracter();
             }
 
-            if (leido >= 48 && leido <= 57)
+
+
+            if (leido == '.')
             {
-                while (leido >= 48 && leido <= 57)
+                // PUNTO FLOTANTE
+                puntoFlotante(leido, e);
+            }
+            else if (leido == 'i')
+            {
+                // IMAGINARIO
+                e->lexema = devolverPalabra();
+                e->componenteLexico = IMAGINARIOS;
+            }
+            else if (leido == 'e' || leido == 'E')
+            {
+                //NÚMERO CON EXPONENTE
+                leido = siguienteCaracter();
+
+                if (leido == '+' || leido == '-')
                 {
                     leido = siguienteCaracter();
                 }
+
+                if (leido >= 48 && leido <= 57)
+                {
+                    while (leido >= 48 && leido <= 57)
+                    {
+                        leido = siguienteCaracter();
+                    }
+                }
+
+                devolverCaracter();
+
+                e->lexema = devolverPalabra();
+                e->componenteLexico = FLOTANTES;
             }
-
-            devolverCaracter();
-
-            e->lexema = devolverPalabra();
-            e->componenteLexico = FLOTANTES;
-        }
-        else
-        {
-            //ENTERO SIMPLE
-            devolverCaracter();
-            
-            e->lexema = devolverPalabra();
-            e->componenteLexico = ENTERO;
+            else
+            {
+                //ENTERO SIMPLE
+                devolverCaracter();
+                
+                e->lexema = devolverPalabra();
+                e->componenteLexico = ENTERO;
+            }
         }
     }
 }
