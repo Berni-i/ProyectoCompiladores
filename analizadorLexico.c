@@ -34,8 +34,6 @@ tipoelem *siguienteElemento()
         caracter = siguienteCaracter();
     }
 
-    printf("caracter %c\n", caracter);
-
     // si es el final de fichero devolver null
     if (caracter == EOF)
     {

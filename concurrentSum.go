@@ -25,5 +25,3 @@ func main() {
         fmt.Println("Partial results and \"Total\" sum:");
         fmt.Println(i, j, i+j)
 }
-
-0xBadFace42
