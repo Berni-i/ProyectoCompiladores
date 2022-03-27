@@ -18,7 +18,7 @@ void cadenas(tipoelem *e);
 
 void flotanteHexadecimal(char caracter, tipoelem *e);
 
-// función que devolverá un puntero a estructura conteniendo el siguiente lexema
+// función que devolverá un puntero a una estructura tipoelem conteniendo el siguiente lexema
 // y su correspondiente componente léxico.
 tipoelem *siguienteElemento()
 {
@@ -27,82 +27,79 @@ tipoelem *siguienteElemento()
     // leer caracter
     char caracter = siguienteCaracter();
 
-    // saltar los espacios y los finales de línea
-    while (caracter == 32 || caracter == '\n')
+    //detectar en primer lugar los espacios, comentarios o el caracter de fin de fichero
+    while (caracter == '/' || caracter == 32 || caracter == '\n' || caracter == EOF)
     {
-        saltarCaracter();
-        caracter = siguienteCaracter();
-    }
+        // si es el final de fichero devolver null
+        if (caracter == EOF)
+        {
+            return NULL;
+        }
 
-    // si es el final de fichero devolver null
-    if (caracter == EOF)
-    {
-        return NULL;
-    }
+        //saltar los espacios
+        while (caracter == 32 || caracter == '\n')
+        {
+            saltarCaracter();
+            caracter = siguienteCaracter();
+        }
 
-    // detectar comentarios y omitirlos también
-    if (caracter == '/')
-    {
-        caracter = siguienteCaracter();
-
+        // detectar comentarios y omitirlos también
         if (caracter == '/')
         {
-            // saltar hasta el final de línea
-            while (caracter != '\n')
-            {
-                caracter = siguienteCaracter();
-                saltarCaracter();
-            }
-        }
-        else if (caracter == '*')
-        {
-            while (caracter != EOF)
-            {
-                caracter = siguienteCaracter();
-                saltarCaracter();
+            caracter = siguienteCaracter();
 
-                // saltar hasta que encuentre un */
-                if (caracter == '*')
+            if (caracter == '/')
+            {
+                // saltar hasta el final de línea
+                while (caracter != '\n')
+                {
+                    caracter = siguienteCaracter();
+                    saltarCaracter();
+                }
+            }
+            else if (caracter == '*')
+            {
+                while (caracter != EOF)
                 {
                     caracter = siguienteCaracter();
                     saltarCaracter();
 
-                    if (caracter == '/')
+                    // saltar hasta que encuentre un */
+                    if (caracter == '*')
                     {
                         caracter = siguienteCaracter();
                         saltarCaracter();
-                        break;
+
+                        if (caracter == '/')
+                        {
+                            caracter = siguienteCaracter();
+                            saltarCaracter();
+                            break;
+                        }
                     }
                 }
             }
-        }
-        else
-        {
-            // reservar memoria después de comprobar que no es un comentario
-            e = malloc(sizeof(tipoelem));
+            else
+            {
+                // reservar memoria después de comprobar que no es un comentario
+                e = malloc(sizeof(tipoelem));
 
-            // devolver / si no se trata de un comentario
-            caracter = '/';
+                // devolver / si no se trata de un comentario
+                caracter = '/';
 
-            devolverCaracter();
+                devolverCaracter();
 
-            e->lexema = devolverPalabra();
-            e->componenteLexico = caracter;
-            saltarCaracter();
+                e->lexema = devolverPalabra();
+                e->componenteLexico = caracter;
+                saltarCaracter();
 
-            return e;
+                return e;
+            }
         }
     }
 
-    // reservar memoria después de comprobar que no es un comentario
+    // reservar memoria después de saltar comentarios y espacios
     e = malloc(sizeof(tipoelem));
-
-    // volver a saltar los espacios
-    while (caracter == 32 || caracter == '\n')
-    {
-        saltarCaracter();
-        caracter = siguienteCaracter();
-    }
 
     // comprobar si se trata de una cadena alfanumérica
     // un caracter del alfabeto o una barra baja
@@ -152,7 +149,7 @@ void cadenaAlfanumerica(char caracter, tipoelem *e)
     // actualizar elemento
     e->lexema = devolverPalabra();
 
-    // preguntar a la tabla de símbolos de qué se trata
+    // preguntar a la tabla de símbolos si se trata de un identificador o de una palabra reservada
     e->componenteLexico = devolverComponente(e->lexema);
 }
 
@@ -201,7 +198,7 @@ void numeros(char caracter, tipoelem *e)
 
                 if (leido == '.')
                 {
-                    //numero tipo 0x1a2b.
+                    // numero tipo 0x1a2b.
                     flotanteHexadecimal(leido, e);
                 }
                 else if (leido == 'p' || leido == 'P')
@@ -213,8 +210,8 @@ void numeros(char caracter, tipoelem *e)
                     {
                         leido = siguienteCaracter();
                     }
-                    
-                    //comprobar si existe un exponente
+
+                    // comprobar si existe un exponente
                     if ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
                     {
                         while ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
@@ -222,9 +219,10 @@ void numeros(char caracter, tipoelem *e)
                             leido = siguienteCaracter();
                         }
 
-                        //comprobar si es imaginario o no
+                        // comprobar si es imaginario o no
                         if (leido == 'i')
                         {
+                            //no es necesario devolver el carácter ya que la i forma parte del lexema
                             e->lexema = devolverPalabra();
                             e->componenteLexico = IMAGINARIOS;
                         }
@@ -245,7 +243,7 @@ void numeros(char caracter, tipoelem *e)
                 }
                 else if (leido == 'i')
                 {
-                    //numero imaginario sin exponente ni parte decimal
+                    // numero imaginario sin exponente ni parte decimal
                     e->lexema = devolverPalabra();
                     e->componenteLexico = IMAGINARIOS;
                 }
@@ -277,7 +275,7 @@ void numeros(char caracter, tipoelem *e)
                 leido = siguienteCaracter();
             }
 
-            //comprobar si es imaginario
+            // comprobar si es imaginario
             if (leido == 'i')
             {
                 // actualizar elemento
@@ -304,7 +302,7 @@ void numeros(char caracter, tipoelem *e)
                 leido = siguienteCaracter();
             }
 
-            //comprobar si es imaginario
+            // comprobar si es imaginario
             if (leido == 'i')
             {
                 // actualizar elemento
@@ -389,7 +387,7 @@ void numeros(char caracter, tipoelem *e)
     }
 }
 
-//función para comprobar operadores formados por más de un carácter
+// función para comprobar operadores formados por más de un carácter
 void operadoresVariosDigitos(char caracter, tipoelem *e)
 {
     char leido;
@@ -452,19 +450,19 @@ void operadoresVariosDigitos(char caracter, tipoelem *e)
     }
 }
 
-//función para leer la parte derecha del punto en un número
+// función para leer la parte derecha del punto en un número
 void puntoFlotante(char caracter, tipoelem *e)
 {
 
     char leido = siguienteCaracter();
 
-    //leer números en formato decimal
+    // leer números en formato decimal
     while (leido >= 48 && leido <= 57)
     {
         leido = siguienteCaracter();
     }
 
-    //comprobar exponente
+    // comprobar exponente
     if (leido == 'E' || leido == 'e')
     {
         leido = siguienteCaracter();
@@ -487,7 +485,7 @@ void puntoFlotante(char caracter, tipoelem *e)
         }
     }
 
-    //comprobar si es imaginario
+    // comprobar si es imaginario
     if (leido == 'i')
     {
         e->lexema = devolverPalabra();
@@ -502,7 +500,7 @@ void puntoFlotante(char caracter, tipoelem *e)
     }
 }
 
-//función para detectar cadenas
+// función para detectar cadenas
 void cadenas(tipoelem *e)
 {
     char leido;
@@ -532,7 +530,7 @@ void cadenas(tipoelem *e)
     e->componenteLexico = CADENAS;
 }
 
-//función para leer la parte derecha del punto en números hexadecimales
+// función para leer la parte derecha del punto en números hexadecimales
 void flotanteHexadecimal(char caracter, tipoelem *e)
 {
     char leido = siguienteCaracter();
@@ -563,10 +561,9 @@ void flotanteHexadecimal(char caracter, tipoelem *e)
         {
             mostrarError(3);
         }
-
     }
 
-    //comprobar si es imaginario
+    // comprobar si es imaginario
     if (leido == 'i')
     {
         // actualizar elemento

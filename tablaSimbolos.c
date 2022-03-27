@@ -17,6 +17,7 @@ void imprimir(abb A) {
 	}
 }
 
+//función para imprimir la tabla de símbolos
 void imprimirTabla(){
     printf("\n");
     imprimir(tablaSimbolos);
@@ -35,7 +36,7 @@ void inicializarTabla(){
 
     for (int i = 0; i < sizeof(nombres)/TAMCADENA; i++)
     {
-        //printf("%s\n", nombres[i]);
+
 
         //crear un struct por que contenga lexema y componente léxico
         tipoelem elemento;
@@ -52,11 +53,14 @@ void inicializarTabla(){
 
 }
 
+//función para distinguir entre identificadores y palabras reservadas del lenguaje
 int devolverComponente(char *lexema){
     tipoelem e;
 
+    //iniciar el componente léxico a -1 para saber si se encuentra después en la tabla o no
     e.componenteLexico = -1;
 
+    //buscar nodo hace que e apunte a la estructura si está presente en el árbol
     buscar_nodo(tablaSimbolos, lexema, &e);
 
     if(e.componenteLexico != -1){
@@ -64,6 +68,7 @@ int devolverComponente(char *lexema){
     }else{
         e.componenteLexico = ID;
 
+        //se reserva memoria para el lexema y se deja una copia en la tabla de símbolos
         e.lexema = malloc(strlen(lexema)+1);
 
         strcpy(e.lexema, lexema);
@@ -74,6 +79,7 @@ int devolverComponente(char *lexema){
     }
 }
 
+//función que permita liberar la memoria refernte a la tabla
 void destruirTabla(){
     destruir(&tablaSimbolos);
 }

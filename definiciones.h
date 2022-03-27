@@ -30,4 +30,4 @@
 typedef struct {
 	char *lexema;
 	int componenteLexico;
-} tipoelem; //definir tipoelem aquí para no modificar el .c
+} tipoelem; 

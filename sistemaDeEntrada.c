@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "definiciones.h"
 #include "errores.h"
 
@@ -84,12 +85,14 @@ char siguienteCaracter()
         }
         else
         {
+            delantero += 1;
             return EOF;
         }
     }else{
         delantero += 1;
     }
 
+    //sumar uno al contador de longitud
     contador++;
 
     return caracter;
@@ -123,6 +126,9 @@ char *devolverPalabra()
     //reservar tamaño para el tamaño de la cadena más el carácter vacío
     palabra = malloc(tam+1);
 
+    //introducir el carácter de fin de cadena
+     *(palabra + tam) = '\0';
+
     //mientras se encuentran separados
     while (inicio != delantero)
     {
@@ -141,8 +147,8 @@ char *devolverPalabra()
         //si delantero se encontrase en la primera posición del buffer
         if(inicio == delantero) break;
 
+        //ir introduciendo caracteres uno a uno
         *(palabra + i) = *inicio;
-        *(palabra + i + 1) = '\0';
 
         inicio += 1;
         i++;
@@ -152,12 +158,15 @@ char *devolverPalabra()
 }
 
 // función que permita ignorar caracteres cuando se trate de espacios o comentarios
+//llevando inicio a la posición de delantero
 void saltarCaracter()
 {
     inicio = delantero;
     contador = 0;
 }
 
+//función que permite retrasar la posición de delantero como solo se retrasa
+//una posición no es necesario considerar posibles cargas de buffer duplicadas
 void devolverCaracter()
 {
     delantero -= 1;
