@@ -14,6 +14,14 @@ void mostrarError(int codigo){
     case 2:
         printf("No se puede acceder al archivo con el código fuente\n");
         break;
+    
+    case 3:
+        printf("Número sin exponente\n");
+        break;
+
+    case 4:
+        printf("Prefijo hexadecimal sin número\n");
+        break;
 
     }
 }

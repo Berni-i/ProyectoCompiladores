@@ -105,7 +105,7 @@ char *devolverPalabra()
     //reiniciar el contador
     contador = 0;
 
-
+    //calcular espacio según la distancia que existe entre los punteros
     if(delantero >= b1 && delantero <= (b1+TAMCADENA)){
         if(inicio >= b1 && inicio <= (b1+TAMCADENA)){
             tam = delantero - inicio;
@@ -120,6 +120,7 @@ char *devolverPalabra()
         }
     }
 
+    //reservar tamaño para el tamaño de la cadena más el carácter vacío
     palabra = malloc(tam+1);
 
     //mientras se encuentran separados
@@ -139,12 +140,6 @@ char *devolverPalabra()
 
         //si delantero se encontrase en la primera posición del buffer
         if(inicio == delantero) break;
-
-        //aumentar el tamaño del buffer
-        /*if(i == tam){
-            tam += tam;
-            palabra = realloc(palabra, tam+1);
-        }*/
 
         *(palabra + i) = *inicio;
         *(palabra + i + 1) = '\0';

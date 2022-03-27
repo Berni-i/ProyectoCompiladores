@@ -1,8 +1,10 @@
+#include <string.h>
+#include <stdlib.h>
+
 #include "definiciones.h"
 #include "sistemaDeEntrada.h"
 #include "tablaSimbolos.h"
-#include <string.h>
-#include <stdlib.h>
+#include "errores.h"
 
 void cadenaAlfanumerica(char caracter, tipoelem *e);
 
@@ -14,6 +16,10 @@ void puntoFlotante(char caracter, tipoelem *e);
 
 void cadenas(tipoelem *e);
 
+void flotanteHexadecimal(char caracter, tipoelem *e);
+
+// función que devolverá un puntero a estructura conteniendo el siguiente lexema
+// y su correspondiente componente léxico.
 tipoelem *siguienteElemento()
 {
     tipoelem *e;
@@ -27,6 +33,8 @@ tipoelem *siguienteElemento()
         saltarCaracter();
         caracter = siguienteCaracter();
     }
+
+    printf("caracter %c\n", caracter);
 
     // si es el final de fichero devolver null
     if (caracter == EOF)
@@ -72,7 +80,7 @@ tipoelem *siguienteElemento()
         }
         else
         {
-            // reservar memoria después de comprobar que no es un malloc
+            // reservar memoria después de comprobar que no es un comentario
             e = malloc(sizeof(tipoelem));
 
             // devolver / si no se trata de un comentario
@@ -88,7 +96,7 @@ tipoelem *siguienteElemento()
         }
     }
 
-    // reservar memoria después de comprobar que no es un malloc
+    // reservar memoria después de comprobar que no es un comentario
     e = malloc(sizeof(tipoelem));
 
     // volver a saltar los espacios
@@ -137,7 +145,6 @@ void cadenaAlfanumerica(char caracter, tipoelem *e)
 
     while ((leido >= 65 && leido <= 90) || (leido >= 97 && leido <= 122) || (leido >= 48 && leido <= 57) || leido == 95)
     {
-        // leer siguiente caracter
         leido = siguienteCaracter();
     }
 
@@ -181,16 +188,85 @@ void numeros(char caracter, tipoelem *e)
             // HEXADECIMAL
             leido = siguienteCaracter();
 
-            while ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
+            if (leido == '.')
             {
-                leido = siguienteCaracter();
+                // numero tipo 0x.
+                flotanteHexadecimal(leido, e);
             }
+            else if ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
+            {
+                // leer todos los dígitos hexadecimales
+                while ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
+                {
+                    leido = siguienteCaracter();
+                }
 
-            devolverCaracter();
+                if (leido == '.')
+                {
+                    //numero tipo 0x1a2b.
+                    flotanteHexadecimal(leido, e);
+                }
+                else if (leido == 'p' || leido == 'P')
+                {
+                    // hexadecimal con exponente
+                    leido = siguienteCaracter();
 
-            // actualizar elemento
-            e->lexema = devolverPalabra();
-            e->componenteLexico = ENTERO;
+                    if (leido == '+' || leido == '-')
+                    {
+                        leido = siguienteCaracter();
+                    }
+                    
+                    //comprobar si existe un exponente
+                    if ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
+                    {
+                        while ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
+                        {
+                            leido = siguienteCaracter();
+                        }
+
+                        //comprobar si es imaginario o no
+                        if (leido == 'i')
+                        {
+                            e->lexema = devolverPalabra();
+                            e->componenteLexico = IMAGINARIOS;
+                        }
+                        else
+                        {
+                            devolverCaracter();
+
+                            e->lexema = devolverPalabra();
+                            e->componenteLexico = FLOTANTES;
+                        }
+                    }
+                    else
+                    {
+                        // número sin exponente después de la p
+                        mostrarError(3);
+                        devolverPalabra();
+                    }
+                }
+                else if (leido == 'i')
+                {
+                    //numero imaginario sin exponente ni parte decimal
+                    e->lexema = devolverPalabra();
+                    e->componenteLexico = IMAGINARIOS;
+                }
+                else
+                {
+                    devolverCaracter();
+
+                    // actualizar elemento
+                    e->lexema = devolverPalabra();
+                    // solo cifras hexadecimales
+                    e->componenteLexico = ENTERO;
+                }
+            }
+            else
+            {
+                // solo aparece el 0x
+                mostrarError(4);
+                devolverPalabra();
+            }
         }
         // Detectar binario
         else if ((caracter == '0') && (leido == 'b' || leido == 'B'))
@@ -203,12 +279,23 @@ void numeros(char caracter, tipoelem *e)
                 leido = siguienteCaracter();
             }
 
-            devolverCaracter();
+            //comprobar si es imaginario
+            if (leido == 'i')
+            {
+                // actualizar elemento
+                e->lexema = devolverPalabra();
+                e->componenteLexico = IMAGINARIOS;
+            }
+            else
+            {
+                devolverCaracter();
 
-            // actualizar elemento
-            e->lexema = devolverPalabra();
-            e->componenteLexico = ENTERO;
+                // actualizar elemento
+                e->lexema = devolverPalabra();
+                e->componenteLexico = ENTERO;
+            }
         }
+        // Detetar octal
         else if ((caracter == '0') && (leido == 'o' || leido == 'O'))
         {
             // BINARIO
@@ -219,11 +306,21 @@ void numeros(char caracter, tipoelem *e)
                 leido = siguienteCaracter();
             }
 
-            devolverCaracter();
+            //comprobar si es imaginario
+            if (leido == 'i')
+            {
+                // actualizar elemento
+                e->lexema = devolverPalabra();
+                e->componenteLexico = IMAGINARIOS;
+            }
+            else
+            {
+                devolverCaracter();
 
-            // actualizar elemento
-            e->lexema = devolverPalabra();
-            e->componenteLexico = ENTERO;
+                // actualizar elemento
+                e->lexema = devolverPalabra();
+                e->componenteLexico = ENTERO;
+            }
         }
         else
         {
@@ -231,7 +328,6 @@ void numeros(char caracter, tipoelem *e)
             // EMPEZANDO POR DÍGITOS
             while ((leido >= 48 && leido <= 57))
             {
-
                 leido = siguienteCaracter();
             }
 
@@ -263,11 +359,25 @@ void numeros(char caracter, tipoelem *e)
                         leido = siguienteCaracter();
                     }
                 }
+                else
+                {
+                    mostrarError(3);
+                }
 
-                devolverCaracter();
+                if (leido == 'i')
+                {
+                    // actualizar elemento
+                    e->lexema = devolverPalabra();
+                    e->componenteLexico = IMAGINARIOS;
+                }
+                else
+                {
+                    devolverCaracter();
 
-                e->lexema = devolverPalabra();
-                e->componenteLexico = FLOTANTES;
+                    // actualizar elemento
+                    e->lexema = devolverPalabra();
+                    e->componenteLexico = FLOTANTES;
+                }
             }
             else
             {
@@ -281,6 +391,7 @@ void numeros(char caracter, tipoelem *e)
     }
 }
 
+//función para comprobar operadores formados por más de un carácter
 void operadoresVariosDigitos(char caracter, tipoelem *e)
 {
     char leido;
@@ -343,16 +454,19 @@ void operadoresVariosDigitos(char caracter, tipoelem *e)
     }
 }
 
+//función para leer la parte derecha del punto en un número
 void puntoFlotante(char caracter, tipoelem *e)
 {
 
     char leido = siguienteCaracter();
 
+    //leer números en formato decimal
     while (leido >= 48 && leido <= 57)
     {
         leido = siguienteCaracter();
     }
 
+    //comprobar exponente
     if (leido == 'E' || leido == 'e')
     {
         leido = siguienteCaracter();
@@ -371,10 +485,11 @@ void puntoFlotante(char caracter, tipoelem *e)
         }
         else
         {
-            // error porque no tendría exponente
+            mostrarError(3);
         }
     }
 
+    //comprobar si es imaginario
     if (leido == 'i')
     {
         e->lexema = devolverPalabra();
@@ -389,6 +504,7 @@ void puntoFlotante(char caracter, tipoelem *e)
     }
 }
 
+//función para detectar cadenas
 void cadenas(tipoelem *e)
 {
     char leido;
@@ -416,4 +532,55 @@ void cadenas(tipoelem *e)
     // actualizar elemento
     e->lexema = devolverPalabra();
     e->componenteLexico = CADENAS;
+}
+
+//función para leer la parte derecha del punto en números hexadecimales
+void flotanteHexadecimal(char caracter, tipoelem *e)
+{
+    char leido = siguienteCaracter();
+
+    while ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
+    {
+        leido = siguienteCaracter();
+    }
+
+    if (leido == 'p' || leido == 'P')
+    {
+        // NÚMERO CON EXPONENTE
+        leido = siguienteCaracter();
+
+        if (leido == '+' || leido == '-')
+        {
+            leido = siguienteCaracter();
+        }
+
+        if ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
+        {
+            while ((leido >= 48 && leido <= 57) || (leido >= 97 && leido <= 102) || (leido >= 65 && leido <= 70))
+            {
+                leido = siguienteCaracter();
+            }
+        }
+        else
+        {
+            mostrarError(3);
+        }
+
+    }
+
+    //comprobar si es imaginario
+    if (leido == 'i')
+    {
+        // actualizar elemento
+        e->lexema = devolverPalabra();
+        e->componenteLexico = IMAGINARIOS;
+    }
+    else
+    {
+        devolverCaracter();
+
+        // actualizar elemento
+        e->lexema = devolverPalabra();
+        e->componenteLexico = FLOTANTES;
+    }
 }

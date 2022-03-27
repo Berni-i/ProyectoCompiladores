@@ -17,6 +17,7 @@ int main(int argc, char const *argv[])
     fuente = fopen("concurrentSum.go", "r");
 
     if(fuente == NULL){
+        //error si no se puede acceder al archivo
         mostrarError(2);
         exit(1);
     }
